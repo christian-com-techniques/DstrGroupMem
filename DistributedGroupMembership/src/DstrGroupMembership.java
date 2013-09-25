@@ -1,4 +1,6 @@
 import java.awt.List;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -13,11 +15,8 @@ public class DstrGroupMembership {
 	private static int TGossip = 1000;
 	private static boolean running = true;
 	
-	public static void main(String[] args) throws InterruptedException, JAXBException {
+	public static void main(String[] args) throws InterruptedException, JAXBException, SocketException, UnknownHostException {
 
-		//MembershipList memList = new MembershipList();
-        //memList.addEntry("192.168.56.101");
-		
 		MembershipList.add("192.168.56.101");
 
         ConnectionHandler connectionHandler = new ConnectionHandler();

@@ -2,7 +2,6 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-//@XmlRootElement(name="entry")
 public class MembershipEntry {
     private int heartbeatCounter;
     private long joinedtstamp;
@@ -22,27 +21,22 @@ public class MembershipEntry {
         this.failedFlag = false;
     }
     
-    //@XmlElement(name="heartbeat")
     public int getHeartbeatCounter() {
     	return heartbeatCounter;
     }
     
-    //@XmlElement(name="joinedtstamp")
     public long getJoinedtstamp() {
     	return joinedtstamp;
     }
     
-    //@XmlElement(name="lastupdtstamp")
     public long getLastupdtstamp() {
     	return lastupdtstamp;
     }
     
-    @XmlElement(name="ipAddress")
-    public String getiPpAddress() {
+    public String getIPAddress() {
     	return ipAddress;
     }
     
-    @XmlElement(name="failedFlag")
     public boolean getFailedFlag() {
     	return failedFlag;
     }

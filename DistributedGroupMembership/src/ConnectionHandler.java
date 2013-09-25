@@ -57,7 +57,7 @@ public class ConnectionHandler implements Runnable {
 			}
 
         	String msg = new String(buffer, 0, packet.getLength());
-            System.out.println(packet.getAddress().getHostAddress()+ "\n: "+ msg);
+            System.out.println(packet.getAddress().getHostAddress()+ ":\n"+ msg);
             
             
             InputSource source = new InputSource(new StringReader(msg));
@@ -77,18 +77,15 @@ public class ConnectionHandler implements Runnable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-            
-            
-			//System.out.println("Element "+a.getNodeName());
-
-			//ArrayList<MembershipEntry> membershipList = MembershipList.getmembershipList();
-			//System.out.println(membershipList.size());
+                        
 			
-			
+			// Go this way, when the node receives a join-request from another node
             if(a.getNodeName() == "join") {
-            	
+
+            // Go this way, when the node receives a leave-request from another node      	
             } else if(a.getNodeName() == "leave") {
-            	
+            
+    		// Go this way, when the node gets a membershiplist from another node
             } else if(a.getNodeName() == "membershipList") {
             	
             }

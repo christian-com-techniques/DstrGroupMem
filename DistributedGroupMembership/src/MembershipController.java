@@ -1,45 +1,61 @@
 import java.io.IOException;
-import java.io.StringWriter;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 
 
 
 public class MembershipController {
 
-	
+	private static int contactPort = 61233;
 	
 	public static void sendJoinGroup(String contactIP, int contactPort) throws JAXBException {
 		
-		/*
-		JAXBContext jc = JAXBContext.newInstance(MembershipList.class);
-        Marshaller marshaller = jc.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        StringWriter sw = new StringWriter();
-        marshaller.marshal(memList, sw);
-        */
+		String msg = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<join></join>\n";
         
         try {
-			Supplier.send(contactIP, contactPort, sw.toString());
+			Supplier.send(contactIP, contactPort, msg);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}    
+	}
+	
+	public static void sendLeaveGroup() {	
+	}
+	
+	public static void sendGossip() throws SocketException, UnknownHostException {
+		
+		ArrayList<MembershipEntry> memList = MembershipList.get();
+		
+		//There can be multiple IPs on the computer. We assume that the first IP OwnIP gets is the interface which is connected to the LAN
+		ArrayList<String> ownIPs = OwnIP.find();
+		
+		//Randomly pick nodes to send the gossip to but avoid our own IP in ownIPs.get(0)
+		for(int i = 0;i < memList.size()/2;i++) {
+			int randNum = (int)(Math.random() * ((memList.size()-1) + 1));
+			
+			MembershipEntry mE = memList.get(randNum);
+			String contactIP = mE.getIPAddress();
+			
+			if(contactIP == ownIPs.get(0)) {
+				i = i-1;
+				continue;
+			}
+			
+			String marshalledMessage = DstrMarshaller.toXML(memList);
+			
+	        try {
+				Supplier.send(contactIP, contactPort, marshalledMessage);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-        
-	}
-	
-	public static void sendLeaveGroup() {
-		
-	}
-	
-	public static void sendGossip() {
-		
 	}
 	
 	public static void incrementHeartbeat() {
-		
 	}
 	
 }
