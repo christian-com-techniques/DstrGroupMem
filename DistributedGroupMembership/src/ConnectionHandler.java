@@ -1,14 +1,19 @@
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.*;
-import java.util.Enumeration;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.StringReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
+import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 
 public class ConnectionHandler implements Runnable {
@@ -31,6 +36,9 @@ public class ConnectionHandler implements Runnable {
 
     public void run() {
 
+    	
+    	
+    	
     	DatagramSocket rcvSocket = null;
 		try {
 			rcvSocket = new DatagramSocket(port);
@@ -49,14 +57,39 @@ public class ConnectionHandler implements Runnable {
 			}
 
         	String msg = new String(buffer, 0, packet.getLength());
-            System.out.println(packet.getAddress().getHostAddress()+ ": "+ msg);
+            System.out.println(packet.getAddress().getHostAddress()+ "\n: "+ msg);
             
             
-            if(msg == "join") {
+            InputSource source = new InputSource(new StringReader(msg));
+
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db;
+            Element a = null;
+            
+			try {
+				db = dbf.newDocumentBuilder();
+	            Document doc = db.parse(source);
+	            a = doc.getDocumentElement();
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+			} catch (SAXException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+            
+            
+			//System.out.println("Element "+a.getNodeName());
+
+			//ArrayList<MembershipEntry> membershipList = MembershipList.getmembershipList();
+			//System.out.println(membershipList.size());
+			
+			
+            if(a.getNodeName() == "join") {
             	
-            } else if(msg == "leave") {
+            } else if(a.getNodeName() == "leave") {
             	
-            } else if(msg == "updateList") {
+            } else if(a.getNodeName() == "membershipList") {
             	
             }
             

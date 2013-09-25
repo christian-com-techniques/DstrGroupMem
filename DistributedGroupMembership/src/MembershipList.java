@@ -1,22 +1,26 @@
 import java.util.ArrayList;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 
-@XmlRootElement
-@XmlSeeAlso({MembershipEntry.class})
 public class MembershipList {
 	
-	private ArrayList<MembershipEntry> membershipList = new ArrayList<MembershipEntry>();
+	private static ArrayList<MembershipEntry> membershipList = null;
 
-	@XmlElement(name = "member")
-	public ArrayList<MembershipEntry> getmembershipList() {
-	    return membershipList;
-	}
-
-	public void addEntry(String ip) {
+	public static void add(String ip) {
+		
+		if(membershipList == null) {
+			membershipList = new ArrayList<MembershipEntry>();
+		}
+		
         MembershipEntry mE = new MembershipEntry(ip);
-		this.membershipList.add(mE);
+        membershipList.add(mE);
 	}
 
+	public static ArrayList<MembershipEntry> get() {
+		return membershipList;
+	}
+	
 }

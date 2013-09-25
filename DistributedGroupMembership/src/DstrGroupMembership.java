@@ -1,4 +1,6 @@
+import java.awt.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.xml.bind.JAXBException;
 
@@ -6,21 +8,23 @@ import javax.xml.bind.JAXBException;
 public class DstrGroupMembership {
 
 	//Define the address of the contact-machine for the initialization
-	private static String contactIP = "192.168.56.102";	
+	private static String contactIP = "192.168.56.101";	
 	private static int contactPort = 61233;
 	private static int TGossip = 1000;
 	private static boolean running = true;
 	
 	public static void main(String[] args) throws InterruptedException, JAXBException {
 
+		//MembershipList memList = new MembershipList();
+        //memList.addEntry("192.168.56.101");
+		
+		MembershipList.add("192.168.56.101");
+
         ConnectionHandler connectionHandler = new ConnectionHandler();
         Thread handlerThread = new Thread(connectionHandler, "Connection Handler");
         handlerThread.start();
-        
-        MembershipList memList = new MembershipList();
-        memList.addEntry("192.168.56.101");
-        
-        MembershipController.sendJoinGroup(contactIP, contactPort, memList);
+                
+        MembershipController.sendJoinGroup(contactIP, contactPort);
         
         while(running) {
         	MembershipController.incrementHeartbeat();

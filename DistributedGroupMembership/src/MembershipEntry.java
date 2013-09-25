@@ -2,7 +2,7 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="entry")
+//@XmlRootElement(name="entry")
 public class MembershipEntry {
     private int heartbeatCounter;
     private long joinedtstamp;
@@ -22,17 +22,17 @@ public class MembershipEntry {
         this.failedFlag = false;
     }
     
-    @XmlElement(name="heartbeat")
+    //@XmlElement(name="heartbeat")
     public int getHeartbeatCounter() {
     	return heartbeatCounter;
     }
     
-    @XmlElement(name="joinedtstamp")
+    //@XmlElement(name="joinedtstamp")
     public long getJoinedtstamp() {
     	return joinedtstamp;
     }
     
-    @XmlElement(name="lastupdtstamp")
+    //@XmlElement(name="lastupdtstamp")
     public long getLastupdtstamp() {
     	return lastupdtstamp;
     }
