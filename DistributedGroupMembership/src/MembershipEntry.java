@@ -1,7 +1,12 @@
 import java.util.Date;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "membershipentry")
 public class MembershipEntry {
     private int heartbeatCounter;
     private long joinedtstamp;
@@ -39,6 +44,22 @@ public class MembershipEntry {
     
     public boolean getFailedFlag() {
     	return failedFlag;
+    }
+    
+    public void incrHeartbeatCount() {
+    	heartbeatCounter++;
+    }
+    
+    public void setFailedFlag(boolean failed) {
+    	failedFlag = failed;
+    }
+    
+    public void setHeartbeat(int heartbeatCounter) {
+    	this.heartbeatCounter = heartbeatCounter;
+    }
+    
+    public void setLastUpdTstamp(long lastupdtstamp) {
+    	this.lastupdtstamp = lastupdtstamp;
     }
 
 }

@@ -17,22 +17,29 @@ public class DstrGroupMembership {
 	
 	public static void main(String[] args) throws InterruptedException, JAXBException, SocketException, UnknownHostException {
 
-		MembershipList.add("192.168.56.101");
-
+		//Add our own machine to our local membershipList
+		String myIP = OwnIP.find().get(0);
+		MembershipList.add(myIP);
+		
+		//And also add the contact machine to out local membership
+		MembershipList.add(contactIP);
+		
         ConnectionHandler connectionHandler = new ConnectionHandler();
         Thread handlerThread = new Thread(connectionHandler, "Connection Handler");
         handlerThread.start();
                 
-        MembershipController.sendJoinGroup(contactIP, contactPort);
+        // Well, maybe it's unnecessary that a new machine sends a join-statement - it may just start to gossip. 
+        // Since the own membershipentry is in the list which is sent out, other machines hear about the new machine anyway.
+        //MembershipController.sendJoinGroup(contactIP, contactPort);
         
         while(running) {
-        	MembershipController.incrementHeartbeat();
+        	MembershipList.incrHeartbeatCounter();
         	MembershipController.sendGossip();
         	Thread.sleep(TGossip);
         	
         	//TODO implement a counter to resend sendJoinGroup after t seconds, if no membership-list is received
         }
-
+		
         
         handlerThread.interrupt();
 	}

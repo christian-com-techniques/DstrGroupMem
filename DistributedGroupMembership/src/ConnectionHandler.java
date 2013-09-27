@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -36,9 +37,6 @@ public class ConnectionHandler implements Runnable {
 
     public void run() {
 
-    	
-    	
-    	
     	DatagramSocket rcvSocket = null;
 		try {
 			rcvSocket = new DatagramSocket(port);
@@ -56,9 +54,9 @@ public class ConnectionHandler implements Runnable {
 				e.printStackTrace();
 			}
 
+        	
         	String msg = new String(buffer, 0, packet.getLength());
             System.out.println(packet.getAddress().getHostAddress()+ ":\n"+ msg);
-            
             
             InputSource source = new InputSource(new StringReader(msg));
 
@@ -79,7 +77,7 @@ public class ConnectionHandler implements Runnable {
 			}
                         
 			
-			// Go this way, when the node receives a join-request from another node
+			// Go this way, when the node receives a join-request from another node (maybe not necessary)
             if(a.getNodeName() == "join") {
 
             // Go this way, when the node receives a leave-request from another node      	
@@ -88,11 +86,23 @@ public class ConnectionHandler implements Runnable {
     		// Go this way, when the node gets a membershiplist from another node
             } else if(a.getNodeName() == "membershipList") {
             	
+            	ArrayList<MembershipEntry> receivedMemList = new ArrayList<MembershipEntry>();
+            	
+            	try {
+					receivedMemList = DstrMarshaller.unmarshallXML(msg);
+				} catch (JAXBException e) {
+					e.printStackTrace();
+				}
+            	
+            	MembershipController.updateMembershipList(receivedMemList);
+            	
+            	/*
+            	for(int i=0;i<receivedMemList.size();i++) {
+            		System.out.println(receivedMemList.get(i).getIPAddress());
+            	}
+            	*/
             }
             
-            
-            
-
         }
 
         System.out.println("[" + this.getClass().toString() + "] is dying.");
