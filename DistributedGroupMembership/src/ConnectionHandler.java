@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.DatagramPacket;
@@ -38,24 +37,24 @@ public class ConnectionHandler implements Runnable {
     public void run() {
 
     	DatagramSocket rcvSocket = null;
-		try {
-			rcvSocket = new DatagramSocket(port);
-		} catch (SocketException e1) {
-			System.out.println("Can't listen on port "+port);
-		}
+        try {
+            rcvSocket = new DatagramSocket(port);
+        } catch (SocketException e1) {
+            System.out.println("Can't listen on port "+port);
+        }
     	byte[] buffer = new byte[bufferSize];
     	DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         System.out.println("Waiting for UDP packets: Started");
 
         while(shouldRun) {
-        	try {
-				rcvSocket.receive(packet);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            try {
+                rcvSocket.receive(packet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         	
-        	String msg = new String(buffer, 0, packet.getLength());
+            String msg = new String(buffer, 0, packet.getLength());
             System.out.println(packet.getAddress().getHostAddress()+ ":\n"+ msg);
             
             InputSource source = new InputSource(new StringReader(msg));
@@ -64,23 +63,23 @@ public class ConnectionHandler implements Runnable {
             DocumentBuilder db;
             Element a = null;
             
-			try {
-				db = dbf.newDocumentBuilder();
-	            Document doc = db.parse(source);
-	            a = doc.getDocumentElement();
-			} catch (ParserConfigurationException e) {
-				e.printStackTrace();
-			} catch (SAXException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            try {
+                db = dbf.newDocumentBuilder();
+                Document doc = db.parse(source);
+                a = doc.getDocumentElement();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
                         
 			
-			// Go this way, when the node receives a join-request from another node (maybe not necessary)
+            // Go this way, when the node receives a join-request from another node (maybe not necessary)
             if(a.getNodeName() == "join") {
 
-            // Go this way, when the node receives a leave-request from another node      	
+                // Go this way, when the node receives a leave-request from another node      	
             } else if(a.getNodeName() == "leave") {
             
     		// Go this way, when the node gets a membershiplist from another node
@@ -89,17 +88,17 @@ public class ConnectionHandler implements Runnable {
             	ArrayList<MembershipEntry> receivedMemList = new ArrayList<MembershipEntry>();
             	
             	try {
-					receivedMemList = DstrMarshaller.unmarshallXML(msg);
-				} catch (JAXBException e) {
-					e.printStackTrace();
-				}
+                    receivedMemList = DstrMarshaller.unmarshallXML(msg);
+                } catch (JAXBException e) {
+                    e.printStackTrace();
+                }
             	
             	MembershipController.updateMembershipList(receivedMemList);
             	
             	/*
-            	for(int i=0;i<receivedMemList.size();i++) {
-            		System.out.println(receivedMemList.get(i).getIPAddress());
-            	}
+                  for(int i=0;i<receivedMemList.size();i++) {
+                  System.out.println(receivedMemList.get(i).getIPAddress());
+                  }
             	*/
             }
             

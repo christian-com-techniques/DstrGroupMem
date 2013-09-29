@@ -9,12 +9,12 @@ import java.util.Enumeration;
 
 public class OwnIP {
 
-	private static ArrayList<String> IpsOnThisComputer = new ArrayList<String>();
+    private static ArrayList<String> IpsOnThisComputer = new ArrayList<String>();
 	
-	//Returns a list of all IP address of all interface of this computer
-	public static ArrayList<String> find() throws SocketException, UnknownHostException {
+    //Returns a list of all IP address of all interface of this computer
+    public static ArrayList<String> find() throws SocketException, UnknownHostException {
 		
-		IpsOnThisComputer = new ArrayList<String>();
+        IpsOnThisComputer = new ArrayList<String>();
 		
         Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
         for (NetworkInterface netint : Collections.list(nets)) {
@@ -26,12 +26,12 @@ public class OwnIP {
 
         //Remove IPv6 addresses to make things easier for us
         for(int i=0;i<IpsOnThisComputer.size();i++) {	
-        	if(IpsOnThisComputer.get(i).length() > 15) {
-        		IpsOnThisComputer.remove(i);
-        	}
+            if(IpsOnThisComputer.get(i).length() > 15) {
+                IpsOnThisComputer.remove(i);
+            }
         }
 
-		return IpsOnThisComputer;
-	}
+        return IpsOnThisComputer;
+    }
 	
 }

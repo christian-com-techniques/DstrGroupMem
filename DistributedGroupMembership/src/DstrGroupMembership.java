@@ -9,20 +9,20 @@ import javax.xml.bind.JAXBException;
 
 public class DstrGroupMembership {
 
-	//Define the address of the contact-machine for the initialization
-	private static String contactIP = "192.168.56.101";	
-	private static int contactPort = 61233;
-	private static int TGossip = 1000;
-	private static boolean running = true;
+    //Define the address of the contact-machine for the initialization
+    private static String contactIP = "192.168.56.101";	
+    private static int contactPort = 61233;
+    private static int TGossip = 1000;
+    private static boolean running = true;
 	
-	public static void main(String[] args) throws InterruptedException, JAXBException, SocketException, UnknownHostException {
+    public static void main(String[] args) throws InterruptedException, JAXBException, SocketException, UnknownHostException {
 
-		//Add our own machine to our local membershipList
-		String myIP = OwnIP.find().get(0);
-		MembershipList.add(myIP);
+        //Add our own machine to our local membershipList
+        String myIP = OwnIP.find().get(0);
+        MembershipList.add(myIP);
 		
-		//And also add the contact machine to out local membership
-		MembershipList.add(contactIP);
+        //And also add the contact machine to out local membership
+        MembershipList.add(contactIP);
 		
         ConnectionHandler connectionHandler = new ConnectionHandler();
         Thread handlerThread = new Thread(connectionHandler, "Connection Handler");
@@ -33,15 +33,15 @@ public class DstrGroupMembership {
         //MembershipController.sendJoinGroup(contactIP, contactPort);
         
         while(running) {
-        	MembershipList.incrHeartbeatCounter();
-        	MembershipController.sendGossip();
-        	Thread.sleep(TGossip);
+            MembershipList.incrHeartbeatCounter();
+            MembershipController.sendGossip();
+            Thread.sleep(TGossip);
         	
-        	//TODO implement a counter to resend sendJoinGroup after t seconds, if no membership-list is received
+            //TODO implement a counter to resend sendJoinGroup after t seconds, if no membership-list is received
         }
 		
         
         handlerThread.interrupt();
-	}
+    }
 
 }

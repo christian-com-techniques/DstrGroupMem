@@ -10,22 +10,22 @@ import javax.xml.bind.Unmarshaller;
 
 public class DstrMarshaller {
 
-	public static String toXML(ArrayList<MembershipEntry> memList) throws JAXBException {
+    public static String toXML(ArrayList<MembershipEntry> memList) throws JAXBException {
 		
-		JAXBContext ctx = JAXBContext.newInstance(MembershipList.class);
-		Marshaller msh = ctx.createMarshaller();
-		StringWriter sw = new StringWriter();
-		msh.marshal(new MembershipList(memList), sw);
+        JAXBContext ctx = JAXBContext.newInstance(MembershipList.class);
+        Marshaller msh = ctx.createMarshaller();
+        StringWriter sw = new StringWriter();
+        msh.marshal(new MembershipList(memList), sw);
 
-		return sw.toString();
-	}
+        return sw.toString();
+    }
 	
-	// Just on case if you want to implement a JSON-marshaller
-	public static String toJSON(ArrayList<MembershipEntry> memList) {
-		return "";
-	}
+    // Just on case if you want to implement a JSON-marshaller
+    public static String toJSON(ArrayList<MembershipEntry> memList) {
+        return "";
+    }
 	
-	public static ArrayList<MembershipEntry> unmarshallXML(String xml) throws JAXBException {
+    public static ArrayList<MembershipEntry> unmarshallXML(String xml) throws JAXBException {
         MembershipList memList = new MembershipList ();
         
         JAXBContext context = JAXBContext.newInstance(MembershipList.class);
@@ -36,11 +36,11 @@ public class DstrMarshaller {
  
         return memList.get();
 
-	}
+    }
 	
-	public static ArrayList<MembershipEntry> unmarshallJSON(String json) {
-		ArrayList<MembershipEntry> mE = new ArrayList<MembershipEntry>();
-		return mE;
-	}
+    public static ArrayList<MembershipEntry> unmarshallJSON(String json) {
+        ArrayList<MembershipEntry> mE = new ArrayList<MembershipEntry>();
+        return mE;
+    }
 	
 }
