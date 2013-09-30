@@ -19,7 +19,6 @@ import org.xml.sax.SAXException;
 public class ConnectionHandler implements Runnable {
 
     private boolean shouldRun = true;
-//    private int port = 61233;
     private Config conf;
     private int bufferSize = 2048;
     private MembershipList list;
@@ -40,14 +39,7 @@ public class ConnectionHandler implements Runnable {
     }
 
     public void run() {
-        int port = Integer.parseInt(conf.valueFor("contactPort"));/*0;
-        try {
-            port = Integer.parseInt(conf.valueFor("contactPort"));
-        }
-        catch (IOException e) {
-            System.out.println(e);
-            return;
-            }*/
+        int port = conf.intFor("contactPort");
 
     	DatagramSocket rcvSocket = null;
         try {
@@ -68,7 +60,7 @@ public class ConnectionHandler implements Runnable {
 
         	
             String msg = new String(buffer, 0, packet.getLength());
-            System.out.println("\nMessage from: " + packet.getAddress().getHostAddress()); //+ msg);
+            System.out.println("\nMessage from: " + packet.getAddress().getHostAddress());
             
             InputSource source = new InputSource(new StringReader(msg));
 
@@ -95,7 +87,7 @@ public class ConnectionHandler implements Runnable {
                 // Go this way, when the node receives a leave-request from another node      	
                 String newMember = packet.getAddress().getHostAddress();
                 System.out.println(newMember + " is joining the cluster.");
-                list.get().add(new MembershipEntry(newMember));
+                list.add(newMember);
                 
             } else if(a.getNodeName() == "leave") {
             
@@ -110,13 +102,8 @@ public class ConnectionHandler implements Runnable {
                     e.printStackTrace();
                 }
             	
-            	MembershipController.updateMembershipList(list, receivedMemList, Integer.parseInt(conf.valueFor("TFail"))/1000);
-            	
-            	/*
-                  for(int i=0;i<receivedMemList.size();i++) {
-                  System.out.println(receivedMemList.get(i).getIPAddress());
-                  }
-            	*/
+            	MembershipController.updateMembershipList(list, receivedMemList, conf.intFor("TFail")/1000);
+                
             }
             
         }

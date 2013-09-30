@@ -28,4 +28,7 @@ public class Config {
     public String valueFor(String key) {
         return this.config.getProperty(key);
     }
+    public int intFor(String key) {
+        return Integer.parseInt(valueFor(key));
+    }
 }

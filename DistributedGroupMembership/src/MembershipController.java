@@ -37,34 +37,41 @@ public class MembershipController {
 		
     }
 	
-    public static void sendGossip(MembershipList list, int contactPort, String ownIP) throws SocketException, UnknownHostException, JAXBException {
+    public static void sendGossip(MembershipList list, String contactIP, int contactPort, String ownIP) throws SocketException, UnknownHostException, JAXBException {
 		
         ArrayList<MembershipEntry> memList = list.get();
-		
-        //There can be multiple IPs on the computer. We assume that the first IP OwnIP gets is the interface which is connected to the LAN
-        //ArrayList<String> ownIPs = OwnIP.find();
-				
-        //Randomly pick nodes to send the gossip to. Total of n/2+1 nodes, but avoid our own IP in ownIPs.get(0)
+						
+        //Randomly pick nodes to send the gossip to. Total of n/2+1 nodes, but avoid our own IP in ownIP
+
+        //If we're the only one in the group that we know of, let's join!
+        if(memList.size() <= 1) {
+            if(!contactIP.equals(ownIP)) {
+                System.out.println("Joining! " + ownIP + " -> " + contactIP);
+                sendJoinGroup(contactIP, contactPort);
+            }
+            return;
+        }
+            
+        
         for(int i = 0;i < memList.size()/2+1;i++) {
             int randNum = (int)(Math.random() * ((memList.size()-1) + 1));
 			
             if(randNum == -1)
                 return;
+            
             MembershipEntry mE = memList.get(randNum);
-            String contactIP = mE.getIPAddress();
-			
-            // For testing purpose, I commented the filter so that messages are also sent back to our own machine
-            /*
-              if(contactIP.equals(ownIP)) {
-              i = i-1;
-              continue;
-              }
-            */
+            String selectedIP = mE.getIPAddress();
+            
+            if(selectedIP.equals(ownIP)) {
+                i = i-1;
+                continue;
+            }
+            
 			
             String marshalledMessage = DstrMarshaller.toXML(memList);
 			
             try {
-                Supplier.send(contactIP, contactPort, marshalledMessage);
+                Supplier.send(selectedIP, contactPort, marshalledMessage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -80,7 +87,6 @@ public class MembershipController {
         }
         System.out.println("");
 
-//        System.out.println(own.get().size());
     	for(int i = 0;i < receivedMemList.size();i++) {
             
             //Keep track of whether or not we're already tracking each node in the received member list.
@@ -105,9 +111,6 @@ public class MembershipController {
                     int recListHeartbeat = receivedMemList.get(i).getHeartbeatCounter();
                     int ownListHeartbeat = ownMemList.get(j).getHeartbeatCounter();
         			
-                    //long recListLastUpdate = receivedMemList.get(i).getLastupdtstamp();
-                    //long ownListLastUpdate = ownMemList.get(j).getLastupdtstamp();
-        			
                     //If the heartbeat of the received list is higher, we update our own list.
                     if(recListHeartbeat > ownListHeartbeat) {
                         ownMemList.get(j).setHeartbeat(recListHeartbeat);
@@ -123,7 +126,6 @@ public class MembershipController {
             if(!ownMemListContainsReceived && !receivedMemList.get(i).getFailedFlag()) {
                 System.out.println(receivedMemList.get(i).getIPAddress() + " is not in our list. Adding.");
                 long currentTime = new Date().getTime()/1000;
-                //receivedMemList.get(i).setLastUpdTstamp(currentTime);
                 ownMemList.add(receivedMemList.get(i));
             }
     	}

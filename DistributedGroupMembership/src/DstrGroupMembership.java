@@ -8,10 +8,6 @@ import java.io.IOException;
 
 public class DstrGroupMembership {
 
-    //Define the address of the contact-machine for the initialization
-    //private static String contactIP = "192.168.56.101";	
-    //private static int contactPort = 61233;
-    //private static int TGossip = 1000;
     private static boolean running = true;
     private static Config conf;
     private static MembershipList ownList;
@@ -28,33 +24,25 @@ public class DstrGroupMembership {
         }
 
         //Add our own machine to our local membershipList
-        String myIP = conf.valueFor("bindIP"); //OwnIP.find().get(0);
+        String myIP = conf.valueFor("bindIP");
         ownList = new MembershipList();
         ownList.add(myIP);
 		
         //And also add the contact machine to out local membership
-        //ownList.add(conf.valueFor("contactIP"));
         String contactIP = conf.valueFor("contactIP");
-        int contactPort = Integer.parseInt(conf.valueFor("contactPort"));
+        int contactPort = conf.intFor("contactPort");
 
-        MembershipController.sendJoinGroup(contactIP, contactPort);
-
-
-	
         ConnectionHandler connectionHandler = new ConnectionHandler(ownList, conf);
         Thread handlerThread = new Thread(connectionHandler, "Connection Handler");
         handlerThread.start();
-                
-        // Well, maybe it's unnecessary that a new machine sends a join-statement - it may just start to gossip. 
-        // Since the own membershipentry is in the list which is sent out, other machines hear about the new machine anyway.
-        //MembershipController.sendJoinGroup(contactIP, contactPort);
+
+
+        MembershipController.sendJoinGroup(contactIP, contactPort);
         
         while(running) {
             ownList.incrHeartbeatCounter(myIP);
-            MembershipController.sendGossip(ownList, contactPort, myIP);
-            Thread.sleep(Integer.parseInt(conf.valueFor("TGossip")));
-        	
-            //TODO implement a counter to resend sendJoinGroup after t seconds, if no membership-list is received
+            MembershipController.sendGossip(ownList, contactIP, contactPort, myIP);
+            Thread.sleep(conf.intFor("TGossip"));
         }
 		
         
