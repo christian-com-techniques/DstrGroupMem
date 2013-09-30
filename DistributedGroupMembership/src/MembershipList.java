@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class MembershipList {
 	
     @XmlElement(name = "membershipentry", type = MembershipEntry.class)
-    private static ArrayList<MembershipEntry> membershipList = null;
+    private ArrayList<MembershipEntry> membershipList = null;
 
     public MembershipList() { 
         membershipList = new ArrayList<MembershipEntry>();
