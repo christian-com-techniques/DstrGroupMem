@@ -76,7 +76,7 @@ public class MembershipController {
     	ArrayList<MembershipEntry> ownMemList = own.get();
         
         for(int i = 0; i < own.get().size(); i++) {
-            System.out.print(own.get().get(i).getIPAddress() + " ");
+            System.out.print(own.get().get(i).getIPAddress() + "(" + !own.get().get(i).getFailedFlag() + ") ");
         }
         System.out.println("");
 
@@ -99,7 +99,6 @@ public class MembershipController {
                 //If IP and joinedTsmp of the received entry are the same as in our list, the entry exists
                 // and we check if there're any updates to do.
                 if(receivedIP.equals(ownListIP) && receivedJoinedtstamp == ownListJoinedtstamp) {
-                    System.out.println("found: " + ownListIP);
 
                     ownMemListContainsReceived = true;
 
@@ -116,11 +115,6 @@ public class MembershipController {
                         ownMemList.get(j).setLastUpdTstamp(currentTime);
                     }
                     break;
-                }	
-                else if(receivedIP.equals(ownListIP)) {
-                    
-                    System.out.println(receivedIP + ": " + receivedJoinedtstamp);
-                    System.out.println(ownListIP + ": " + ownListJoinedtstamp);
                 }
             }
             
