@@ -93,7 +93,9 @@ public class ConnectionHandler implements Runnable {
             if(a.getNodeName() == "join") {
 
                 // Go this way, when the node receives a leave-request from another node      	
-                list.get().add(new MembershipEntry(packet.getAddress().toString()));
+                String newMember = packet.getAddress().toString();
+                System.out.println(newMember + " is joining the cluster.");
+                list.get().add(new MembershipEntry(newMember));
                 
             } else if(a.getNodeName() == "leave") {
             
