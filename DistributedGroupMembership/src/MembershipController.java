@@ -117,6 +117,11 @@ public class MembershipController {
                     }
                     break;
                 }	
+                else if(receivedIP.equals(ownListIP)) {
+                    
+                    System.out.println(receivedIP + ": " + receivedJoinedtstamp);
+                    System.out.println(ownListIP + ": " + ownListJoinedtstamp);
+                }
             }
             
             // If we are at the end of our own list and we didn't find an entry in our own list but it appears in the
