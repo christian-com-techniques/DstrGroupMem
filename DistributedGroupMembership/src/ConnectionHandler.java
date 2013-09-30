@@ -68,7 +68,7 @@ public class ConnectionHandler implements Runnable {
 
         	
             String msg = new String(buffer, 0, packet.getLength());
-            System.out.println("Message from: " + packet.getAddress().getHostAddress()+ ":\n"); //+ msg);
+            System.out.println("\nMessage from: " + packet.getAddress().getHostAddress()); //+ msg);
             
             InputSource source = new InputSource(new StringReader(msg));
 
