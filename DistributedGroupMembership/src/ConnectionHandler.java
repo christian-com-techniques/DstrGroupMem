@@ -93,6 +93,8 @@ public class ConnectionHandler implements Runnable {
             if(a.getNodeName() == "join") {
 
                 // Go this way, when the node receives a leave-request from another node      	
+                list.get().add(new MembershipEntry(packet.getAddress().toString()));
+                
             } else if(a.getNodeName() == "leave") {
             
     		// Go this way, when the node gets a membershiplist from another node

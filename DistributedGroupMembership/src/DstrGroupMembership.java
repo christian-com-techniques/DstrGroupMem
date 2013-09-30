@@ -33,8 +33,14 @@ public class DstrGroupMembership {
         ownList.add(myIP);
 		
         //And also add the contact machine to out local membership
-        ownList.add(conf.valueFor("contactIP"));
-		
+        //ownList.add(conf.valueFor("contactIP"));
+        String contactIP = conf.valueFor("contactIP");
+        int contactPort = Integer.parseInt(conf.valueFor("contactPort"));
+
+        MembershipController.sendJoinGroup(contactIP, contactPort);
+
+
+	
         ConnectionHandler connectionHandler = new ConnectionHandler(ownList, conf);
         Thread handlerThread = new Thread(connectionHandler, "Connection Handler");
         handlerThread.start();
@@ -45,7 +51,7 @@ public class DstrGroupMembership {
         
         while(running) {
             ownList.incrHeartbeatCounter(myIP);
-            MembershipController.sendGossip(ownList, Integer.parseInt(conf.valueFor("contactPort")), myIP);
+            MembershipController.sendGossip(ownList, contactPort, myIP);
             Thread.sleep(Integer.parseInt(conf.valueFor("TGossip")));
         	
             //TODO implement a counter to resend sendJoinGroup after t seconds, if no membership-list is received
