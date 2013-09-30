@@ -37,7 +37,7 @@ public class MembershipController {
 		
     }
 	
-    public static void sendGossip(MembershipList list, String contactIP, int contactPort, String ownIP) throws SocketException, UnknownHostException, JAXBException {
+    public static void sendGossip(MembershipList list, String contactIP, int contactPort, String ownIP, int failSeconds) throws SocketException, UnknownHostException, JAXBException {
 		
         ArrayList<MembershipEntry> memList = list.get();
 						
@@ -48,7 +48,9 @@ public class MembershipController {
             if(!contactIP.equals(ownIP)) {
                 System.out.println("Joining! " + ownIP + " -> " + contactIP);
                 sendJoinGroup(contactIP, contactPort);
+                trackFailing(list, failSeconds);
             }
+            
             return;
         }
             
@@ -130,24 +132,30 @@ public class MembershipController {
             }
     	}
     	
-    	//In this loop, we mark all nodes as failed which are older than currentTime minus failSeconds.
+        trackFailing(own, failSeconds);
+    	
+    }
+    
+    public static void trackFailing(MembershipList own, int failSeconds) {
+        //In this loop, we mark all nodes as failed which are older than currentTime minus failSeconds.
     	//If a node is marked as failed and the lastUpdate timestamp is older than currentTime - (failSeconds * 2) sec, it is deleted.
+
+        ArrayList<MembershipEntry> ownMemList = own.get();
     	
     	for(int i = 0;i < ownMemList.size();i++) {
             long currentTime = new Date().getTime()/1000;
             long lastUpdate = ownMemList.get(i).getLastupdtstamp();
             boolean failedFlag = ownMemList.get(i).getFailedFlag();
-    		
+            
             if(currentTime - (failSeconds * 2)  > lastUpdate && failedFlag == true) {
                 ownMemList.remove(i);
                 continue;
-    			
+    		
             } else if(currentTime - failSeconds > lastUpdate) {
                 ownMemList.get(i).setFailedFlag(true);
             }
     		
     	}
-    	
     }
 
 }
