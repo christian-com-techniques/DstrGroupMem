@@ -11,9 +11,8 @@ import javax.xml.bind.JAXBException;
 
 public class MembershipController {
 
-    private static int contactPort = 61233;
-
-    private static int failSeconds = 5;
+    //private static int contactPort = 61233;
+    //private static int failSeconds = 5;
 	
     public static void sendJoinGroup(String contactIP, int contactPort) throws JAXBException {
 		
@@ -38,23 +37,25 @@ public class MembershipController {
 		
     }
 	
-    public static void sendGossip() throws SocketException, UnknownHostException, JAXBException {
+    public static void sendGossip(MembershipList list, int contactPort, String ownIP) throws SocketException, UnknownHostException, JAXBException {
 		
-        ArrayList<MembershipEntry> memList = MembershipList.get();
+        ArrayList<MembershipEntry> memList = list.get();
 		
         //There can be multiple IPs on the computer. We assume that the first IP OwnIP gets is the interface which is connected to the LAN
-        ArrayList<String> ownIPs = OwnIP.find();
+        //ArrayList<String> ownIPs = OwnIP.find();
 				
         //Randomly pick nodes to send the gossip to. Total of n/2+1 nodes, but avoid our own IP in ownIPs.get(0)
         for(int i = 0;i < memList.size()/2+1;i++) {
             int randNum = (int)(Math.random() * ((memList.size()-1) + 1));
 			
+            if(randNum == -1)
+                return;
             MembershipEntry mE = memList.get(randNum);
             String contactIP = mE.getIPAddress();
 			
             // For testing purpose, I commented the filter so that messages are also sent back to our own machine
             /*
-              if(contactIP.equals(ownIPs.get(0))) {
+              if(contactIP.equals(ownIP)) {
               i = i-1;
               continue;
               }
@@ -71,9 +72,10 @@ public class MembershipController {
     }
 	
 	
-    public static void updateMembershipList(ArrayList<MembershipEntry> receivedMemList) {
-    	ArrayList<MembershipEntry> ownMemList = MembershipList.get();
+    public static void updateMembershipList(MembershipList own, ArrayList<MembershipEntry> receivedMemList, int failSeconds) {
+    	ArrayList<MembershipEntry> ownMemList = own.get();
         
+        System.out.println(own.get().size());
     	for(int i = 0;i < receivedMemList.size();i++) {
             
             //Keep track of whether or not we're already tracking each node in the received member list.

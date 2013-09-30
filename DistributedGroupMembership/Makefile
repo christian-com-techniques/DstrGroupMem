@@ -6,13 +6,14 @@ FILES = src/ConnectionHandler.java\
 	src/MembershipController.java\
 	src/MembershipEntry.java\
 	src/MembershipList.java\
-	src/OwnIP.java\
 	src/Supplier.java\
-	src/UserInputHandler.java
+	src/UserInputHandler.java\
+	src/Config.java
 
 
 all : $(FILES)
 	-@mkdir $(OUTPUTDIR)
+	-@cp gossip.conf $(OUTPUTDIR)/
 	javac $(FILES) -d $(OUTPUTDIR)
 
 clean : 

@@ -48,6 +48,8 @@ public class MembershipEntry {
     
     public void incrHeartbeatCount() {
     	heartbeatCounter++;
+        long currentTime = new Date().getTime()/1000;
+        lastupdtstamp = currentTime;
     }
     
     public void setFailedFlag(boolean failed) {

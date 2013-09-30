@@ -19,14 +19,19 @@ import org.xml.sax.SAXException;
 public class ConnectionHandler implements Runnable {
 
     private boolean shouldRun = true;
-    private int port = 61233;
+//    private int port = 61233;
+    private Config conf;
     private int bufferSize = 2048;
+    private MembershipList list;
 
-    public ConnectionHandler() {
+    public ConnectionHandler(MembershipList list, Config conf) {
+        this.list = list;
+        this.conf = conf;
     }
     
-    public ConnectionHandler(int port, int bufferSize) {
-    	this.port = port;
+    public ConnectionHandler(MembershipList list, Config conf, int bufferSize) {
+        this.list = list;
+    	this.conf = conf;
     	this.bufferSize = bufferSize;
     }
 
@@ -35,6 +40,14 @@ public class ConnectionHandler implements Runnable {
     }
 
     public void run() {
+        int port = Integer.parseInt(conf.valueFor("contactPort"));/*0;
+        try {
+            port = Integer.parseInt(conf.valueFor("contactPort"));
+        }
+        catch (IOException e) {
+            System.out.println(e);
+            return;
+            }*/
 
     	DatagramSocket rcvSocket = null;
         try {
@@ -93,7 +106,7 @@ public class ConnectionHandler implements Runnable {
                     e.printStackTrace();
                 }
             	
-            	MembershipController.updateMembershipList(receivedMemList);
+            	MembershipController.updateMembershipList(list, receivedMemList, Integer.parseInt(conf.valueFor("TFail"))/1000);
             	
             	/*
                   for(int i=0;i<receivedMemList.size();i++) {
