@@ -25,10 +25,6 @@ public class MembershipList {
     
     public void add(String ip) {		
         
-        for(int i = 0; i < membershipList.size(); i++)
-            if(membershipList.get(i).getIPAddress().equals(ip))
-                return;
-
         System.out.println("Adding: " + ip);
         MembershipEntry mE = new MembershipEntry(ip);
         membershipList.add(mE);
