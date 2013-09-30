@@ -41,7 +41,8 @@ public class DstrGroupMembership {
         
         while(running) {
             ownList.incrHeartbeatCounter(myIP);
-            MembershipController.sendGossip(ownList, contactIP, contactPort, myIP, conf.intFor("TFail"));
+            MembershipController.trackFailing(ownList, conf.intFor("TFail")/1000);
+            MembershipController.sendGossip(ownList, contactIP, contactPort, myIP);
             Thread.sleep(conf.intFor("TGossip"));
         }
 		

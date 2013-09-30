@@ -102,7 +102,7 @@ public class ConnectionHandler implements Runnable {
                     e.printStackTrace();
                 }
             	
-            	MembershipController.updateMembershipList(list, receivedMemList, conf.intFor("TFail")/1000);
+            	MembershipController.updateMembershipList(list, receivedMemList);
                 
             }
             

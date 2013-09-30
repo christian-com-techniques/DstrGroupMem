@@ -37,7 +37,7 @@ public class MembershipController {
 		
     }
 	
-    public static void sendGossip(MembershipList list, String contactIP, int contactPort, String ownIP, int failSeconds) throws SocketException, UnknownHostException, JAXBException {
+    public static void sendGossip(MembershipList list, String contactIP, int contactPort, String ownIP) throws SocketException, UnknownHostException, JAXBException {
 		
         ArrayList<MembershipEntry> memList = list.get();
 						
@@ -48,8 +48,7 @@ public class MembershipController {
             if(!contactIP.equals(ownIP)) {
                 System.out.println("Joining! " + ownIP + " -> " + contactIP);
                 sendJoinGroup(contactIP, contactPort);
-            }
-            trackFailing(list, failSeconds);            
+            }            
             return;
         }
             
@@ -80,7 +79,7 @@ public class MembershipController {
     }
 	
 	
-    public static void updateMembershipList(MembershipList own, ArrayList<MembershipEntry> receivedMemList, int failSeconds) {
+    public static void updateMembershipList(MembershipList own, ArrayList<MembershipEntry> receivedMemList) {
     	ArrayList<MembershipEntry> ownMemList = own.get();
         
         for(int i = 0; i < own.get().size(); i++) {
@@ -129,10 +128,7 @@ public class MembershipController {
                 long currentTime = new Date().getTime()/1000;
                 ownMemList.add(receivedMemList.get(i));
             }
-    	}
-    	
-        trackFailing(own, failSeconds);
-    	
+    	}	
     }
     
     public static void trackFailing(MembershipList own, int failSeconds) {
