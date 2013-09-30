@@ -37,7 +37,7 @@ public class DstrGroupMembership {
         handlerThread.start();
 
 
-        MembershipController.sendJoinGroup(contactIP, contactPort);
+        //MembershipController.sendJoinGroup(contactIP, contactPort);
         
         while(running) {
             ownList.incrHeartbeatCounter(myIP);
