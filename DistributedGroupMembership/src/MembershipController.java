@@ -82,11 +82,6 @@ public class MembershipController {
     public static void updateMembershipList(MembershipList own, ArrayList<MembershipEntry> receivedMemList) {
     	ArrayList<MembershipEntry> ownMemList = own.get();
         
-        for(int i = 0; i < own.get().size(); i++) {
-            System.out.print(own.get().get(i).getIPAddress() + "(" + !own.get().get(i).getFailedFlag() + ") ");
-        }
-        System.out.println("");
-
     	for(int i = 0;i < receivedMemList.size();i++) {
             
             //Keep track of whether or not we're already tracking each node in the received member list.
