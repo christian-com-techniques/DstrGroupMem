@@ -23,14 +23,15 @@ public class DstrGroupMembership {
             return;
         }
 
-        //Add our own machine to our local membershipList
+        
         String myIP = conf.valueFor("bindIP");
-        ownList = new MembershipList();
-        //ownList.add(myIP);
-		
-        //And also add the contact machine to out local membership
+        ownList = new MembershipList();	
+        
         String contactIP = conf.valueFor("contactIP");
         int contactPort = conf.intFor("contactPort");
+
+        if(myIP.equals(contactIP))
+            ownList.add(myIP);
 
         ConnectionHandler connectionHandler = new ConnectionHandler(ownList, conf);
         Thread handlerThread = new Thread(connectionHandler, "Connection Handler");
