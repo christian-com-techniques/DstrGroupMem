@@ -12,6 +12,8 @@ import javax.xml.bind.JAXBException;
 public class MembershipController {
 
     private static int contactPort = 61233;
+
+    private static int failSeconds = 5;
 	
     public static void sendJoinGroup(String contactIP, int contactPort) throws JAXBException {
 		
@@ -71,8 +73,12 @@ public class MembershipController {
 	
     public static void updateMembershipList(ArrayList<MembershipEntry> receivedMemList) {
     	ArrayList<MembershipEntry> ownMemList = MembershipList.get();
-    	
+        
     	for(int i = 0;i < receivedMemList.size();i++) {
+            
+            //Keep track of whether or not we're already tracking each node in the received member list.
+            boolean ownMemListContainsReceived = false;
+
             for(int j = 0;j < ownMemList.size();j++) {
                 String receivedIP = receivedMemList.get(i).getIPAddress();
                 long receivedJoinedtstamp = receivedMemList.get(i).getJoinedtstamp();
@@ -83,7 +89,9 @@ public class MembershipController {
                 //If IP and joinedTsmp of the received entry are the same as in our list, the entry exists
                 // and we check if there're any updates to do.
                 if(receivedIP.equals(ownListIP) && receivedJoinedtstamp == ownListJoinedtstamp) {
-        			
+
+                    ownMemListContainsReceived = true;
+
                     int recListHeartbeat = receivedMemList.get(i).getHeartbeatCounter();
                     int ownListHeartbeat = ownMemList.get(j).getHeartbeatCounter();
         			
@@ -96,34 +104,31 @@ public class MembershipController {
                         long currentTime = new Date().getTime()/1000;
                         ownMemList.get(j).setLastUpdTstamp(currentTime);
                     }
-        			
-                    continue;
-                }
-        		
-                // If we are at the end of our own list and we didn't find an entry in our own list but it appears in the
-                // received list, we add it.
-                if(j+1 == ownMemList.size()) {
-                    long currentTime = new Date().getTime()/1000;
-                    receivedMemList.get(i).setLastUpdTstamp(currentTime);
-                    ownMemList.add(receivedMemList.get(i));
-                }
-        		
+                }	
+            }
+            
+            // If we are at the end of our own list and we didn't find an entry in our own list but it appears in the
+            // received list, we add it.
+            if(!ownMemListContainsReceived) {
+                long currentTime = new Date().getTime()/1000;
+                receivedMemList.get(i).setLastUpdTstamp(currentTime);
+                ownMemList.add(receivedMemList.get(i));
             }
     	}
     	
-    	//In this loop, we mark all nodes as failed which are older than currentTime minus 5 sec.
-    	//If a node is marked as failed and the lastUpdate timestamp is older than currentTime - 10 sec, it is delete.
+    	//In this loop, we mark all nodes as failed which are older than currentTime minus failSeconds.
+    	//If a node is marked as failed and the lastUpdate timestamp is older than currentTime - (failSeconds * 2) sec, it is deleted.
     	
     	for(int i = 0;i < ownMemList.size();i++) {
             long currentTime = new Date().getTime()/1000;
             long lastUpdate = ownMemList.get(i).getLastupdtstamp();
             boolean failedFlag = ownMemList.get(i).getFailedFlag();
     		
-            if(currentTime-10 > lastUpdate && failedFlag == true) {
+            if(currentTime - (failSeconds * 2)  > lastUpdate && failedFlag == true) {
                 ownMemList.remove(i);
                 continue;
     			
-            } else if(currentTime-5 > lastUpdate) {
+            } else if(currentTime - failSeconds > lastUpdate) {
                 ownMemList.get(i).setFailedFlag(true);
             }
     		
