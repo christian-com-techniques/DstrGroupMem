@@ -123,7 +123,7 @@ public class MembershipController {
             if(!ownMemListContainsReceived && !receivedMemList.get(i).getFailedFlag()) {
                 System.out.println(receivedMemList.get(i).getIPAddress() + " is not in our list. Adding.");
                 long currentTime = new Date().getTime()/1000;
-                receivedMemList.get(i).setLastUpdTstamp(currentTime);
+                //receivedMemList.get(i).setLastUpdTstamp(currentTime);
                 ownMemList.add(receivedMemList.get(i));
             }
     	}
