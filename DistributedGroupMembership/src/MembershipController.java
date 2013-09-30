@@ -126,7 +126,7 @@ public class MembershipController {
             
             // If we are at the end of our own list and we didn't find an entry in our own list but it appears in the
             // received list, we add it.
-            if(!ownMemListContainsReceived) {
+            if(!ownMemListContainsReceived && !receivedMemList.get(i).getFailedFlag()) {
                 System.out.println(receivedMemList.get(i).getIPAddress() + " is not in our list. Adding.");
                 long currentTime = new Date().getTime()/1000;
                 receivedMemList.get(i).setLastUpdTstamp(currentTime);
