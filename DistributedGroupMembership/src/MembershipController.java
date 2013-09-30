@@ -48,9 +48,8 @@ public class MembershipController {
             if(!contactIP.equals(ownIP)) {
                 System.out.println("Joining! " + ownIP + " -> " + contactIP);
                 sendJoinGroup(contactIP, contactPort);
-                trackFailing(list, failSeconds);
             }
-            
+            trackFailing(list, failSeconds);            
             return;
         }
             
@@ -154,8 +153,9 @@ public class MembershipController {
             } else if(currentTime - failSeconds > lastUpdate) {
                 ownMemList.get(i).setFailedFlag(true);
             }
-    		
+            System.out.print(own.get().get(i).getIPAddress() + "(" + !own.get().get(i).getFailedFlag() + ") ");
     	}
+        System.out.println("");
     }
 
 }
