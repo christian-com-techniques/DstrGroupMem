@@ -26,7 +26,7 @@ public class DstrGroupMembership {
         //Add our own machine to our local membershipList
         String myIP = conf.valueFor("bindIP");
         ownList = new MembershipList();
-        ownList.add(myIP);
+        //ownList.add(myIP);
 		
         //And also add the contact machine to out local membership
         String contactIP = conf.valueFor("contactIP");
