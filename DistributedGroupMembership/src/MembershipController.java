@@ -40,9 +40,7 @@ public class MembershipController {
     public static void sendGossip(MembershipList list, String contactIP, int contactPort, String ownIP) throws SocketException, UnknownHostException, JAXBException {
 		
         ArrayList<MembershipEntry> memList = list.get();
-						
-        //Randomly pick nodes to send the gossip to. Total of n/2+1 nodes, but avoid our own IP in ownIP
-
+        
         //If we're the only one in the group that we know of, let's join!
         if(memList.size() <= 1) {
             if(!contactIP.equals(ownIP)) {
@@ -50,9 +48,17 @@ public class MembershipController {
                 sendJoinGroup(contactIP, contactPort);
             }            
             return;
-        }
-            
+        }        
+
+        boolean contactAlive = false;
+        for(int i = 0; i < memList.size(); i++)
+            if(memList.get(i).getIPAddress().equals(contactIP))
+                contactAlive = true;
         
+        if(!contactAlive)
+            sendJoinGroup(contactIP, contactPort);
+        
+        //Randomly pick nodes to send the gossip to. Total of n/2+1 nodes, but avoid our own IP in ownIP
         for(int i = 0;i < memList.size()/2+1;i++) {
             int randNum = (int)(Math.random() * ((memList.size()-1) + 1));
 			
