@@ -27,6 +27,10 @@ public class DstrGroupMembership {
         String myIP = conf.valueFor("bindIP");
         ownList = new MembershipList();	
         
+        String logPath = conf.valueFor("logPath");
+        Logger.setPath(logPath);
+
+        
         String contactIP = conf.valueFor("contactIP");
         int contactPort = conf.intFor("contactPort");
 
