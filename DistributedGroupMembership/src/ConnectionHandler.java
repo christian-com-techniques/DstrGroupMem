@@ -86,21 +86,21 @@ public class ConnectionHandler implements Runnable {
 
                 String newMember = packet.getAddress().getHostAddress();
                 try {
-					Logger.log("Join", newMember);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+                    Logger.log("Join", newMember);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 System.out.println(newMember + " is joining the cluster.");
                 list.add(newMember);
-              
-            // Go this way, when the node receives a leave-request from another node  
+                
+                // Go this way, when the node receives a leave-request from another node  
             } else if(a.getNodeName() == "leave") {
-            
+                
     		// Go this way, when the node gets a membershiplist from another node
             } else if(a.getNodeName() == "membershipList") {
             	
             	ArrayList<MembershipEntry> receivedMemList = new ArrayList<MembershipEntry>();
-            	
+                
             	try {
                     receivedMemList = DstrMarshaller.unmarshallXML(msg);
                 } catch (JAXBException e) {
