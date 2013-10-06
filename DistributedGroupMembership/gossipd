@@ -1,0 +1,35 @@
+#!/bin/bash
+
+start () {
+    if [ -e gossipd.pid ];
+    then
+        echo "Pidfile exists. gossip daemon might already be running."
+    else
+        pushd bin >> /dev/null
+        java DstrGroupMembership >> ../gossipd.log &
+        popd >> /dev/null
+        echo "Starting gossip daemon."
+        echo $! >> ./gossipd.pid
+        
+    fi
+}
+
+stop () {
+    if [ -e gossipd.pid ]; 
+    then
+        kill $(cat gossipd.pid)
+        rm gossipd.pid
+        echo "Killed gossip daemon."
+    else
+        echo "Gossip daemon not running or pid file missing."
+    fi
+}
+
+case $1 in 
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+esac
