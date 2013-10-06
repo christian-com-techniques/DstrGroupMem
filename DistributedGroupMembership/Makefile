@@ -8,8 +8,8 @@ FILES = src/ConnectionHandler.java\
 	src/MembershipList.java\
 	src/Supplier.java\
 	src/UserInputHandler.java\
-	src/Config.java
-
+	src/Config.java\
+	src/Logger.java
 
 all : $(FILES)
 	-@mkdir $(OUTPUTDIR)

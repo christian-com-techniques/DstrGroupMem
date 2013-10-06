@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.Properties;
+import java.io.FileInputStream;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +16,7 @@ public class Config {
     public Config(String configFile) throws IOException {
         config = new Properties();
         try {
-            config.load(AppletClassLoader.getSystemResourceAsStream(configFile));
+            config.load(new FileInputStream(configFile));
         } catch (NullPointerException e) {
             throw new IOException("File Not Found: " + configFile);
         }
