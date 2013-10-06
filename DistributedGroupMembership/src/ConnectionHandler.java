@@ -85,11 +85,8 @@ public class ConnectionHandler implements Runnable {
             if(a.getNodeName() == "join") {
 
                 String newMember = packet.getAddress().getHostAddress();
-                try {
-					Logger.log("Join", newMember);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+		
+		Logger.log("Join", newMember);
                 System.out.println(newMember + " is joining the cluster.");
                 list.add(newMember);
               

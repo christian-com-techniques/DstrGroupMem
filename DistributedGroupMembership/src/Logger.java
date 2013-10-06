@@ -2,29 +2,37 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.nio.file.Files;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.attribute.FileAttribute;
+import java.util.Date;
 
 public class Logger {
 
-	private static String path = null;
-
+    private static String path = null;
+    
+    
+    public static void log(String key, String value) {
 	
-	public static void log(String key, String value) throws IOException {
-		File file = new File(path);
-
-	    if (!file.exists()) {
-	    	file.createNewFile();
-	    }
-
-	    FileWriter fw = new FileWriter(file.getAbsoluteFile());
-	    BufferedWriter bw = new BufferedWriter(fw);
-	    bw.write(key+":"+value);
-	    bw.close();
+	File file = new File(path);
+	
+	try {
+	    if (!file.exists())
+		file.createNewFile();
 	    
+	    FileWriter fw = new FileWriter(path, true);
+	    BufferedWriter bw = new BufferedWriter(fw);
+	    bw.write(key+":"+(new Date().getTime()/1000)+" | " + value+"\n");
+	    bw.close();
+	}
+	catch (IOException e) {
+	    System.out.println(e);
 	}
 	
-	public static void setPath(String filepath) {
-	    path = filepath;
-	}
-	
+    }
+    
+    public static void setPath(String filepath) {
+	path = filepath;
+    }
+    
 }

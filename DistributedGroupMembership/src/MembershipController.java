@@ -125,6 +125,7 @@ public class MembershipController {
             // If we are at the end of our own list and we didn't find an entry in our own list but it appears in the
             // received list, we add it.
             if(!ownMemListContainsReceived && !receivedMemList.get(i).getFailedFlag()) {
+		Logger.log("Join", receivedMemList.get(i).getIPAddress());
                 System.out.println(receivedMemList.get(i).getIPAddress() + " is not in our list. Adding.");
                 long currentTime = new Date().getTime()/1000;
                 ownMemList.add(receivedMemList.get(i));
@@ -147,7 +148,8 @@ public class MembershipController {
                 ownMemList.remove(i);
                 continue;
     		
-            } else if(currentTime - failSeconds > lastUpdate) {
+            } else if(currentTime - failSeconds > lastUpdate && failedFlag == false) {
+		Logger.log("Fail", ownMemList.get(i).getIPAddress());
                 ownMemList.get(i).setFailedFlag(true);
             }
             System.out.print(own.get().get(i).getIPAddress() + "(" + !own.get().get(i).getFailedFlag() + ") ");
