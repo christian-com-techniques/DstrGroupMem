@@ -88,6 +88,18 @@ public class ConnectionHandler implements Runnable {
 		Logger.log("Join", newMember);
                 System.out.println(newMember + " is joining the cluster.");
                 list.add(newMember);
+
+                ArrayList<MembershipEntry> memList = list.get();
+
+                try {
+                    String marshalledMessage = DstrMarshaller.toXML(memList);
+                    Supplier.send(newMember, port, marshalledMessage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JAXBException e) {
+                    e.printStackTrace();
+                }
+                
                 
                 // Go this way, when the node receives a leave-request from another node  
             } else if(a.getNodeName() == "leave") {
